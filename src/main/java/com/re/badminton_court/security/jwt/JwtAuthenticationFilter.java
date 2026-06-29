@@ -2,7 +2,7 @@ package com.re.badminton_court.security.jwt;
 
 import com.re.badminton_court.security.CustomUserDetails;
 import com.re.badminton_court.security.CustomUserDetailsService;
-import com.re.badminton_court.service.TokenBlacklistService;
+import com.re.badminton_court.service.auth.TokenBlacklistService;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

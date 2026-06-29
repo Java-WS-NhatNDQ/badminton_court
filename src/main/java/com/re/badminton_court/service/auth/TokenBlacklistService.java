@@ -1,6 +1,6 @@
-package com.re.badminton_court.service;
+package com.re.badminton_court.service.auth;
 
 public interface TokenBlacklistService {
     boolean isBlacklisted(String token);
-    void blacklistToken(String token);
+    void blacklist(String token);
 }

@@ -25,7 +25,7 @@ public class JwtTokenProvider {
         return Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes(StandardCharsets.UTF_8));
     }
 
-    private String generateAccessToken(CustomUserDetails userDetails) {
+    public String generateAccessToken(CustomUserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getAccessTokenExpirationMs());
 
@@ -44,7 +44,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    private String generateRefreshToken(CustomUserDetails userDetails) {
+    public String generateRefreshToken(CustomUserDetails userDetails) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwtProperties.getRefreshTokenExpirationMs());
 

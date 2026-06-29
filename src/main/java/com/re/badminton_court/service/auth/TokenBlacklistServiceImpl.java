@@ -1,11 +1,10 @@
-package com.re.badminton_court.service.impl;
+package com.re.badminton_court.service.auth;
 
 import com.re.badminton_court.model.entity.TokenBlacklist;
 import com.re.badminton_court.model.entity.User;
 import com.re.badminton_court.repository.TokenBlacklistRepository;
 import com.re.badminton_court.repository.UserRepository;
 import com.re.badminton_court.security.jwt.JwtTokenProvider;
-import com.re.badminton_court.service.TokenBlacklistService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,7 +21,7 @@ public class TokenBlacklistServiceImpl implements TokenBlacklistService {
     }
 
     @Override
-    public void blacklistToken(String token) {
+    public void blacklist(String token) {
         String username = jwtTokenProvider.extractUsername(token);
 
         User user = userRepository.findByUsername(username)
