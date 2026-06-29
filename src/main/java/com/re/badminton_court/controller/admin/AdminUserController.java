@@ -26,20 +26,19 @@ public class AdminUserController extends BaseAdminController {
             @ModelAttribute UserSearchRequest request,
             @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
         Page<UserResponse> result = userService.search(request, pageable);
-        return ResponseEntity.ok(ApiResponse.success(result, "Get users successfully"));
+        return ResponseEntity.ok(ApiResponse.success(result, "Get users successfully!!!"));
     }
 
     @GetMapping("/users/{id}")
     public ResponseEntity<ApiResponse<UserResponse>> getById(@PathVariable Long id) {
         UserResponse result = userService.findById(id);
-        return ResponseEntity.ok(ApiResponse.success(result, "Get user successfully"));
+        return ResponseEntity.ok(ApiResponse.success(result, "Get user successfully!"));
     }
 
     @PostMapping("/users")
     public ResponseEntity<ApiResponse<UserResponse>> create(@Valid @RequestBody UserCreateRequest request) {
         UserResponse result = userService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(ApiResponse.success(result, "Create user successfully"));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result, "Create user successfully!!"));
     }
 
     @PutMapping("/users/{id}")
@@ -47,12 +46,12 @@ public class AdminUserController extends BaseAdminController {
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateRequest request) {
         UserResponse result = userService.update(id, request);
-        return ResponseEntity.ok(ApiResponse.success(result, "Update user successfully"));
+        return ResponseEntity.ok(ApiResponse.success(result, "Update user successfully!"));
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity<ApiResponse<Void>> delete(@PathVariable Long id) {
         userService.delete(id);
-        return ResponseEntity.ok(ApiResponse.success(null, "Delete user successfully"));
+        return ResponseEntity.ok(ApiResponse.success(null, "Delete user successfully!!"));
     }
 }
