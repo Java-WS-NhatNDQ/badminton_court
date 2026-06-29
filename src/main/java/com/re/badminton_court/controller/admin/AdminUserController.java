@@ -54,4 +54,16 @@ public class AdminUserController extends BaseAdminController {
         userService.delete(id);
         return ResponseEntity.ok(ApiResponse.success(null, "Delete user successfully!!"));
     }
+
+    @PostMapping("/users/{id}/ban")
+    public ResponseEntity<ApiResponse<UserResponse>> banUser(@PathVariable Long id) {
+        UserResponse result = userService.banUser(id);
+        return ResponseEntity.ok(ApiResponse.success(result, "Ban user successfully!!"));
+    }
+
+    @PostMapping("/users/{id}/unban")
+    public ResponseEntity<ApiResponse<UserResponse>> unbanUser(@PathVariable Long id) {
+        UserResponse result = userService.unbanUser(id);
+        return ResponseEntity.ok(ApiResponse.success(result, "Unban user successfully!"));
+    }
 }

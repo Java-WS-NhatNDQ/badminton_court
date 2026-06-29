@@ -1,5 +1,6 @@
 package com.re.badminton_court.service.auth;
 
+import com.re.badminton_court.exception.UserBannedException;
 import com.re.badminton_court.model.dto.auth.AuthResponse;
 import com.re.badminton_court.model.dto.auth.LoginRequest;
 import com.re.badminton_court.model.dto.auth.RefreshTokenRequest;
@@ -65,6 +66,10 @@ public class AuthServiceImpl implements AuthService{
 
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if (!user.getEnabled()) {
+            throw new UserBannedException("User account is banned!!");
+        }
 
         CustomUserDetails userDetails = new CustomUserDetails(user);
         String accessToken = jwtTokenProvider.generateAccessToken(userDetails);

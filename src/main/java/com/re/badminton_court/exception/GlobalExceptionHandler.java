@@ -46,4 +46,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(ApiResponse.error("Internal server error: " + ex.getMessage()));
     }
+
+    @ExceptionHandler(UserBannedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleUserBanned(UserBannedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
 }

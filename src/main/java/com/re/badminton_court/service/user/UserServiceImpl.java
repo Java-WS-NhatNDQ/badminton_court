@@ -8,6 +8,7 @@ import com.re.badminton_court.model.dto.user.UserUpdateRequest;
 import com.re.badminton_court.model.entity.User;
 import com.re.badminton_court.repository.UserRepository;
 import com.re.badminton_court.repository.UserSpecification;
+import com.re.badminton_court.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,6 +27,7 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Override
     @Transactional(readOnly = true)
@@ -92,6 +95,38 @@ public class UserServiceImpl implements UserService {
             throw new ResourceNotFoundException("User", "id", id);
         }
         userRepository.deleteById(id);
+    }
+
+    @Override
+    public UserResponse banUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setEnabled(false);
+        userRepository.save(user);
+
+        return null;
+    }
+
+    @Override
+    public UserResponse unbanUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User", "id", id));
+        user.setEnabled(true);
+        userRepository.save(user);
+
+        return null;
+    }
+
+    @Override
+    public void resetPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User", "email", email));
+
+        // tao. mat. khau? moi' ngau~ nhien
+        String newPassword = UUID.randomUUID().toString().substring(0, 8);
+        String subject = "Your New Password for Badminton Court";
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        emailService.sendEmail(user.getEmail(), subject, newPassword);
     }
 
     private static UserResponse toUserResponse(User user) {

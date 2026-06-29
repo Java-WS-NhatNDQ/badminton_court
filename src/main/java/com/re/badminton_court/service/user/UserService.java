@@ -13,4 +13,7 @@ public interface UserService {
     UserResponse create(UserCreateRequest request);
     UserResponse update(Long id, UserUpdateRequest request);
     void delete(Long id);
+    UserResponse banUser(Long id);
+    UserResponse unbanUser(Long id);
+    void resetPassword(String email);
 }
