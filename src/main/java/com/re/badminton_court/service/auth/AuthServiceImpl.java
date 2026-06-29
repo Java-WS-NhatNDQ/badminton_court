@@ -67,7 +67,6 @@ public class AuthServiceImpl implements AuthService{
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         CustomUserDetails userDetails = new CustomUserDetails(user);
-
         String accessToken = jwtTokenProvider.generateAccessToken(userDetails);
         String refreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
 
