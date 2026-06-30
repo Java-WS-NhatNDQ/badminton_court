@@ -90,4 +90,9 @@ public class JwtTokenProvider {
                 .atZone(ZoneId.systemDefault())
                 .toLocalDateTime();
     }
+
+    public boolean isAccessToken(String token) {
+        Claims claims = extractClaims(token);
+        return claims.get("type") == null;
+    }
 }

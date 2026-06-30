@@ -26,5 +26,5 @@ public class Court {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cluster_id")
-    private User cluster;
+    private BadmintonCluster cluster;
 }

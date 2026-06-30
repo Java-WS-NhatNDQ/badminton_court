@@ -51,6 +51,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             String username = jwtTokenProvider.extractUsername(token);
 
+            if (!jwtTokenProvider.isAccessToken(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+                response.getWriter().write("""
+                    {
+                      "status": 401,
+                      "error": "Unauthorized",
+                      "message": "Refresh token can't be used as access token"
+                    }
+                    """);
+                return;
+            }
+
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 CustomUserDetails userDetails =
                         (CustomUserDetails) customUserDetailsService.loadUserByUsername(username);

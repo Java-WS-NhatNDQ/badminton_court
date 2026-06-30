@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(false);
         userRepository.save(user);
 
-        return null;
+        return toUserResponse(user);
     }
 
     @Override
@@ -112,7 +112,7 @@ public class UserServiceImpl implements UserService {
         user.setEnabled(true);
         userRepository.save(user);
 
-        return null;
+        return toUserResponse(user);
     }
 
     @Override

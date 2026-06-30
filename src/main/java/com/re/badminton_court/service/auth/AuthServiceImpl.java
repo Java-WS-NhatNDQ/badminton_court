@@ -109,11 +109,25 @@ public class AuthServiceImpl implements AuthService{
         User user = storedRefreshToken.getUser();
         CustomUserDetails userDetails = new CustomUserDetails(user);
 
+        // xoa' luon refresh token cu~ de? lam` co che' rotate token tranh' khi bi. lo. refresh token
+        refreshTokenRepository.delete(storedRefreshToken);
+
         String newAccessToken = jwtTokenProvider.generateAccessToken(userDetails);
+        String newRefreshToken = jwtTokenProvider.generateRefreshToken(userDetails);
+
+        RefreshToken savedRefreshToken = RefreshToken.builder()
+                .token(newRefreshToken)
+                .user(user)
+                .expiryTime(LocalDateTime.now().plusSeconds(
+                        jwtProperties.getRefreshTokenExpirationMs() / 1000
+                ))
+                .build();
+
+        refreshTokenRepository.save(savedRefreshToken);
 
         return AuthResponse.builder()
                 .accessToken(newAccessToken)
-                .refreshToken(storedRefreshToken.getToken())
+                .refreshToken(newRefreshToken)
                 .tokenType("Bearer")
                 .userId(user.getId())
                 .username(user.getUsername())
