@@ -7,7 +7,7 @@ import lombok.*;
 @Data @Builder @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 @Table(name = "courts")
-public class Court {
+public class BadmintonCourt {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

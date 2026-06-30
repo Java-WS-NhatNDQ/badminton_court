@@ -41,15 +41,27 @@ public class GlobalExceptionHandler {
                 .body(ApiResponse.error(message));
     }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<Void>> handleGeneral(Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ApiResponse.error("Internal server error: " + ex.getMessage()));
-    }
-
     @ExceptionHandler(UserBannedException.class)
     public ResponseEntity<ApiResponse<Void>> handleUserBanned(UserBannedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
                 .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CloudStorageUnavailableException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCloudStorageUnavailable(CloudStorageUnavailableException ex) {
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(CloudStorageException.class)
+    public ResponseEntity<ApiResponse<Void>> handleCloudStorageError(CloudStorageException ex) {
+        return ResponseEntity.status(ex.getStatus())
+                .body(ApiResponse.error(ex.getMessage()));
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiResponse<Void>> handleGeneral(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(ApiResponse.error("Internal server error: " + ex.getMessage()));
     }
 }

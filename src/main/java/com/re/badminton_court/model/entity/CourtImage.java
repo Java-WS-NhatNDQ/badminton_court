@@ -17,7 +17,7 @@ public class CourtImage {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "court_id")
-    private Court court;
+    private BadmintonCourt badmintonCourt;
 
     @Column(name = "is_main")
     private Boolean isMain = false;
