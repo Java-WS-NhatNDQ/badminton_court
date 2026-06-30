@@ -15,5 +15,6 @@ public interface UserService {
     void delete(Long id);
     UserResponse banUser(Long id);
     UserResponse unbanUser(Long id);
+    void changePassword(String email, String oldPassword, String newPassword);
     void resetPassword(String email);
 }

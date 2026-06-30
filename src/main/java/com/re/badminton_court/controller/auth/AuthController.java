@@ -1,9 +1,6 @@
 package com.re.badminton_court.controller.auth;
 
-import com.re.badminton_court.model.dto.auth.AuthResponse;
-import com.re.badminton_court.model.dto.auth.ForgotPasswordRequest;
-import com.re.badminton_court.model.dto.auth.LoginRequest;
-import com.re.badminton_court.model.dto.auth.RegisterRequest;
+import com.re.badminton_court.model.dto.auth.*;
 import com.re.badminton_court.service.auth.AuthService;
 import com.re.badminton_court.service.user.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -54,6 +51,12 @@ public class AuthController {
         userService.resetPassword(request.getEmail());
         // sau bo? sung them doi? mat. khau? thi` xoa' access token con` thoi` gian de? dang xuat cac' account dang login
         return ResponseEntity.ok("Reset password sent to email!!");
+    }
+
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@Valid @RequestBody ChangePasswordRequest request) {
+        userService.changePassword(request.getEmail(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok("Change password successfully!!");
     }
 
 }

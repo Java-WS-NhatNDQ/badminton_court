@@ -1,5 +1,6 @@
 package com.re.badminton_court.model.entity;
 
+import com.re.badminton_court.model.enums.BookingStatus;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,14 +19,14 @@ public class Booking {
     @Column(name = "booking_date")
     private LocalDate bookingDate;
 
-    @Column(name = "time_slot", length = 50, nullable = false)
-    private String timeSlot;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "time_slot_id", nullable = false)
+    private TimeSlot timeSlot;
 
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
-    @Column(length = 20, nullable = false)
-    private String status;
+    private BookingStatus status;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
