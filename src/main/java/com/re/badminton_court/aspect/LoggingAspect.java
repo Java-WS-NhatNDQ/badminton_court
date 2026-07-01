@@ -5,16 +5,48 @@ import com.re.badminton_court.model.dto.booking.BookingResponse;
 import com.re.badminton_court.security.CustomUserDetails;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
+import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Aspect
 @Component
 public class LoggingAspect {
+
+    @Pointcut("execution(* com.re.badminton_court.controller..*(..)) || " +
+            "execution(* com.re.badminton_court.service..*(..)) || " +
+            "execution(* com.re.badminton_court.repository..*(..))")
+    public void applicationFunction() {
+    }
+
+    @Around("applicationFunction()")
+    public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
+        long start = System.nanoTime();
+        String methodName = joinPoint.getSignature().toShortString();
+        try {
+            Object result = joinPoint.proceed();
+            log.debug("[PERFORMANCE] {} completed in {} ms by {}",
+                    methodName,
+                    elapsedMillis(start),
+                    currentUsername());
+            return result;
+        } catch (Throwable exception) {
+            log.warn("[PERFORMANCE] {} failed in {} ms by {}: {}",
+                    methodName,
+                    elapsedMillis(start),
+                    currentUsername(),
+                    exception.getMessage());
+            throw exception;
+        }
+    }
 
     @AfterReturning(
             pointcut = "execution(* com.re.badminton_court.service.booking.BookingService.create(..))",
@@ -56,6 +88,10 @@ public class LoggingAspect {
             }
         }
         return null;
+    }
+
+    private long elapsedMillis(long start) {
+        return TimeUnit.NANOSECONDS.toMillis(System.nanoTime() - start);
     }
 
     private String currentUsername() {
