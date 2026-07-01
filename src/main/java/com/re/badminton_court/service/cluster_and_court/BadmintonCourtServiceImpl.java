@@ -46,6 +46,7 @@ public class BadmintonCourtServiceImpl implements BadmintonCourtService {
     @Override
     @Transactional(readOnly = true)
     public Page<BadmintonCourtResponse> findByCluster(Long clusterId, Pageable pageable) {
+        findCluster(clusterId);
         return courtRepository.findByClusterId(clusterId, pageable).map(BadmintonCourtServiceImpl::toResponse);
     }
 

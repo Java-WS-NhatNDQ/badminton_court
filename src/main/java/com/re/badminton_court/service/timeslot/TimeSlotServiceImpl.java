@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
                 .isActive(request.getIsActive() != null ? request.getIsActive() : true)
                 .build();
         validateTimeRange(timeSlot);
+        validateUniqueTimeSlot(timeSlot.getLabel(), timeSlot.getStartTime(), null);
         return toResponse(timeSlotRepository.save(timeSlot));
     }
 
@@ -59,6 +61,7 @@ public class TimeSlotServiceImpl implements TimeSlotService {
             timeSlot.setIsActive(request.getIsActive());
         }
         validateTimeRange(timeSlot);
+        validateUniqueTimeSlot(timeSlot.getLabel(), timeSlot.getStartTime(), id);
         return toResponse(timeSlotRepository.save(timeSlot));
     }
 
@@ -78,6 +81,22 @@ public class TimeSlotServiceImpl implements TimeSlotService {
     private void validateTimeRange(TimeSlot timeSlot) {
         if (!timeSlot.getStartTime().isBefore(timeSlot.getEndTime())) {
             throw new IllegalArgumentException("Start time must be before end time");
+        }
+    }
+
+    private void validateUniqueTimeSlot(String label, LocalTime startTime, Long currentId) {
+        boolean duplicatedLabel = currentId == null
+                ? timeSlotRepository.existsByLabelIgnoreCase(label)
+                : timeSlotRepository.existsByLabelIgnoreCaseAndIdNot(label, currentId);
+        if (duplicatedLabel) {
+            throw new IllegalArgumentException("Time slot label already exists");
+        }
+
+        boolean duplicatedStartTime = currentId == null
+                ? timeSlotRepository.existsByStartTime(startTime)
+                : timeSlotRepository.existsByStartTimeAndIdNot(startTime, currentId);
+        if (duplicatedStartTime) {
+            throw new IllegalArgumentException("Time slot start time already exists");
         }
     }
 
