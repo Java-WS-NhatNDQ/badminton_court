@@ -26,6 +26,7 @@ public class Booking {
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
+    @Enumerated(EnumType.STRING)
     private BookingStatus status;
 
     @Column(name = "created_at")
